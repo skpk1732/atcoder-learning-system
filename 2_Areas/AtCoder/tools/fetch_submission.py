@@ -82,28 +82,24 @@ def load_username(cli_user: str | None) -> str:
     )
 
 
-def fetch_submissions(user: str) -> list[dict]:
-    """提出を取得（新しい順に並べ替えて返す）。
+def fetch_submissions(user: str, from_second: int = 0) -> list[dict]:
+    """from_second 以降の提出を取得（新しい順に並べ替えて返す）。
 
-    まず直近90日を見て、無ければ全履歴を遡る。ページ数に上限を設けて
-    提出数が極端に多いユーザーでも暴走しないようにする。
+    ページ数に上限を設けて提出数が極端に多いユーザーでも暴走しないようにする。
     """
-    for from_second in (int(time.time()) - 90 * 24 * 3600, 0):
-        submissions: list[dict] = []
-        cursor = from_second
-        for _ in range(40):  # 最大 40ページ × 500件
-            data = json.loads(http_get(API_URL.format(user=user, from_second=cursor)))
-            if not data:
-                break
-            submissions.extend(data)
-            if len(data) < 500:  # APIは1回最大500件
-                break
-            cursor = max(s["epoch_second"] for s in data) + 1
-            time.sleep(1)  # API負荷への配慮
-        if submissions:
-            submissions.sort(key=lambda s: s["epoch_second"], reverse=True)
-            return submissions
-    return []
+    submissions: list[dict] = []
+    cursor = from_second
+    for _ in range(40):  # 最大 40ページ × 500件
+        data = json.loads(http_get(API_URL.format(user=user, from_second=cursor)))
+        if not data:
+            break
+        submissions.extend(data)
+        if len(data) < 500:  # APIは1回最大500件
+            break
+        cursor = max(s["epoch_second"] for s in data) + 1
+        time.sleep(1)  # API負荷への配慮
+    submissions.sort(key=lambda s: s["epoch_second"], reverse=True)
+    return submissions
 
 
 def fetch_code(contest_id: str, submission_id: int) -> str:
@@ -132,15 +128,24 @@ def main() -> None:
     args = parser.parse_args()
 
     user = load_username(args.user)
-    submissions = fetch_submissions(user)
-    if args.ac:
-        submissions = [s for s in submissions if s["result"] == "AC"]
-    if args.problem:
-        submissions = [s for s in submissions if s["problem_id"] == args.problem.lower()]
+
+    def matching(subs: list[dict]) -> list[dict]:
+        if args.ac:
+            subs = [s for s in subs if s["result"] == "AC"]
+        if args.problem:
+            subs = [s for s in subs if s["problem_id"] == args.problem.lower()]
+        return subs
+
+    # まず直近90日を検索し、条件に合う提出が足りなければ全履歴に遡る
+    # （古い問題の --problem 指定でもフォールバックで見つかるように）
+    submissions = matching(fetch_submissions(user, int(time.time()) - 90 * 24 * 3600))
+    if len(submissions) <= args.index:
+        time.sleep(1)  # API負荷への配慮
+        submissions = matching(fetch_submissions(user))
     if not submissions:
         sys.exit(f"提出が見つかりませんでした（user={user}, ac_only={args.ac}, problem={args.problem}）")
     if args.index >= len(submissions):
-        sys.exit(f"提出は{len(submissions)}件しかありません（--index {args.index}）")
+        sys.exit(f"条件に合う提出は{len(submissions)}件しかありません（--index {args.index}）")
 
     sub = submissions[args.index]
     code = fetch_code(sub["contest_id"], sub["id"])
