@@ -1,0 +1,16 @@
+# ホワイトリスト方式: まず全体を除外し、システム部分だけをgit管理する
+# （Obsidianのノート類は管理外。含めたくなったら該当ルールを外す）
+/*
+
+# git設定自体
+!.gitignore
+
+# Claude Code のスキル・設定
+!.claude/
+
+# AtCoder提出取得ツール
+!2_Areas/
+2_Areas/*
+!2_Areas/AtCoder/
+2_Areas/AtCoder/*
+!2_Areas/AtCoder/tools/
