@@ -125,9 +125,22 @@ def main() -> None:
     parser.add_argument("--ac", action="store_true", help="AC提出に限定する")
     parser.add_argument("--index", type=int, default=0, help="最新から何番目か（0=最新）")
     parser.add_argument("--problem", help="問題IDを指定（例: abc129_c）。その問題の最新提出を取る")
+    parser.add_argument("--list", action="store_true", help="提出済み問題IDの一覧を表示して終了（コード取得はしない）")
     args = parser.parse_args()
 
     user = load_username(args.user)
+
+    if args.list:
+        # 全履歴から問題IDを列挙（--ac でAC済みに限定）。重複提案の回避などに使う
+        subs = fetch_submissions(user)
+        if args.ac:
+            subs = [s for s in subs if s["result"] == "AC"]
+        seen: dict[str, str] = {}
+        for s in subs:  # 新しい順なので最初に見えたものが最新
+            seen.setdefault(s["problem_id"], s["result"])
+        for pid in sorted(seen):
+            print(pid)
+        return
 
     def matching(subs: list[dict]) -> list[dict]:
         if args.ac:
