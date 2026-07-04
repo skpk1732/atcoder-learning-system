@@ -4,6 +4,8 @@
 
 # git設定自体
 !.gitignore
+!AGENTS.md
+!CLAUDE.md
 
 # Claude Code のスキル・設定
 !.claude/
