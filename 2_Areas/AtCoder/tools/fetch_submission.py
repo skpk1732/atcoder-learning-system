@@ -60,12 +60,24 @@ def http_get(url: str) -> bytes:
         headers["Referer"] = "https://atcoder.jp/"
         headers["Accept"] = "text/html,application/xhtml+xml,*/*;q=0.8"
     req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req, timeout=30) as res:
-        body = res.read()
-        if res.headers.get("Content-Encoding") == "gzip":
-            import gzip
-            body = gzip.decompress(body)
-        return body
+    try:
+        with urllib.request.urlopen(req, timeout=30) as res:
+            body = res.read()
+            if res.headers.get("Content-Encoding") == "gzip":
+                import gzip
+                body = gzip.decompress(body)
+            return body
+    except urllib.error.HTTPError as e:
+        hint = {
+            403: "WAF/レート制限の可能性。しばらく待って再試行を",
+            404: "URLまたは提出IDの間違いの可能性",
+            429: "アクセス過多。時間を置いて再試行を",
+        }.get(e.code, "サーバー側のエラー。時間を置いて再試行を")
+        raise RuntimeError(f"HTTPエラー {e.code}: {url}\n  → {hint}") from e
+    except urllib.error.URLError as e:
+        raise RuntimeError(
+            f"接続エラー: {url}\n  → 理由: {e.reason}（ネットワーク・プロキシ・DNSを確認）"
+        ) from e
 
 
 def load_username(cli_user: str | None) -> str:
@@ -185,4 +197,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except RuntimeError as e:
+        sys.exit(str(e))
