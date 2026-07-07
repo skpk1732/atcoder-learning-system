@@ -22,8 +22,9 @@ description: 今のレベルに合ったAtCoderの練習問題（主にABCのC�
    - 15分自力ACが安定したらPhase 2（D中心）へ全面移行（`緑水 最短ロードマップ.md` 参照）。
 
 3. **問題を選ぶ**:
-   - WebSearch / WebFetch が使えるなら [AtCoder Problems](https://kenkoooo.com/atcoder/) や問題ページを参照して、条件に合う具体的な問題を選ぶ。
-   - 使えない場合は、知っている範囲で適切な難易度のABC C問題を提案し、「AtCoder ProblemsでDiff 〜400のC問題を埋める」という探し方も案内する。
+   - 候補を決めたら **必ず実測Difficultyを照会**: `python 2_Areas/AtCoder/tools/fetch_submission.py --diff <problem_id> ...`（AtCoder Problems準拠・7日キャッシュ）。**記憶による推定Diffをそのまま提示しない**（±200以上ズレた実績あり）。狙いの帯から外れていたら問題を選び直す。
+   - 注意: 古いコンテスト（ABC126以前など）のDiffは参加者層の違いで**高めに出る**傾向。数値と体感のズレを頭に入れておく。
+   - WebSearch / WebFetch が使えるなら [AtCoder Problems](https://kenkoooo.com/atcoder/) や問題ページも参照してよい。
 
 4. **提案フォーマット**（1〜3問。各問について）:
    - 問題名・コンテスト・問題URL
