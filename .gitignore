@@ -22,4 +22,5 @@
 # - config.json: 個人のAtCoder ID（config.example.json を雛形として管理）
 .claude/settings.local.json
 2_Areas/AtCoder/tools/config.json
+2_Areas/AtCoder/tools/problem_models_cache.json
 __pycache__/
