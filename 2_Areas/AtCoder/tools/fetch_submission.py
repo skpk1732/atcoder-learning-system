@@ -23,6 +23,7 @@ from pathlib import Path
 
 API_URL = "https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user={user}&from_second={from_second}"
 SUBMISSION_URL = "https://atcoder.jp/contests/{contest_id}/submissions/{submission_id}"
+MODELS_URL = "https://kenkoooo.com/atcoder/resources/problem-models.json"
 
 # kenkoooo.com のWAFはブラウザ相当のヘッダを要求する。
 # 特に Accept-Encoding が urllib 既定の identity だと 403 になる（gzip 必須）。
@@ -123,6 +124,32 @@ def fetch_code(contest_id: str, submission_id: int) -> str:
     return html.unescape(m.group(1))
 
 
+def get_difficulty(problem_ids: list[str]) -> dict[str, int | None]:
+    """AtCoder Problemsの実測Difficultyを返す（7日キャッシュ）。
+
+    problem-models.json の生値は400未満で実際の体感とずれるため、
+    AtCoder ProblemsのUIと同じ補正（400未満は 400/exp(1-raw/400)）を掛ける。
+    Difficulty未算出の問題は None。
+    """
+    import math
+
+    cache = TOOLS_DIR / "problem_models_cache.json"
+    if not cache.exists() or time.time() - cache.stat().st_mtime > 7 * 24 * 3600:
+        cache.write_bytes(http_get(MODELS_URL))
+    models = json.loads(cache.read_text(encoding="utf-8"))
+
+    result: dict[str, int | None] = {}
+    for pid in problem_ids:
+        raw = models.get(pid.lower(), {}).get("difficulty")
+        if raw is None:
+            result[pid] = None
+        elif raw < 400:
+            result[pid] = round(400 / math.exp(1.0 - raw / 400))
+        else:
+            result[pid] = round(raw)
+    return result
+
+
 def pick_extension(language: str) -> str:
     lang = language.lower()
     for key, ext in EXT_BY_LANGUAGE.items():
@@ -138,7 +165,14 @@ def main() -> None:
     parser.add_argument("--index", type=int, default=0, help="最新から何番目か（0=最新）")
     parser.add_argument("--problem", help="問題IDを指定（例: abc129_c）。その問題の最新提出を取る")
     parser.add_argument("--list", action="store_true", help="提出済み問題IDの一覧を表示して終了（コード取得はしない）")
+    parser.add_argument("--diff", nargs="+", metavar="PROBLEM_ID",
+                        help="問題の実測Difficulty（AtCoder Problems準拠）を表示して終了")
     args = parser.parse_args()
+
+    if args.diff:
+        for pid, d in get_difficulty(args.diff).items():
+            print(pid, d if d is not None else "（Difficulty未算出）")
+        return
 
     user = load_username(args.user)
 
