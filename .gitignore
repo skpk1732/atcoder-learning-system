@@ -10,12 +10,13 @@
 # Claude Code のスキル・設定
 !.claude/
 
-# AtCoder提出取得ツール
+# AtCoder提出取得ツール＋コピペ用スニペット集（コード資産のみ管理。ノートは管理外）
 !2_Areas/
 2_Areas/*
 !2_Areas/AtCoder/
 2_Areas/AtCoder/*
 !2_Areas/AtCoder/tools/
+!2_Areas/AtCoder/snippets.py
 
 # ローカル専用ファイルは管理しない（後方のルールが優先される）
 # - settings.local.json: 実行許可などマシン固有の設定を他環境に持ち込まない
