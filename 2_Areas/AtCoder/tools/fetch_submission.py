@@ -167,11 +167,29 @@ def main() -> None:
     parser.add_argument("--list", action="store_true", help="提出済み問題IDの一覧を表示して終了（コード取得はしない）")
     parser.add_argument("--diff", nargs="+", metavar="PROBLEM_ID",
                         help="問題の実測Difficulty（AtCoder Problems準拠）を表示して終了")
+    parser.add_argument("--url", help="提出詳細ページのURLから直接コード取得（API未反映時の復旧用。提出詳細は公開）")
     args = parser.parse_args()
 
     if args.diff:
         for pid, d in get_difficulty(args.diff).items():
             print(pid, d if d is not None else "（Difficulty未算出）")
+        return
+
+    if args.url:
+        # 例: https://atcoder.jp/contests/abc466/submissions/77540984
+        m = re.search(r"contests/([^/]+)/submissions/(\d+)", args.url)
+        if not m:
+            sys.exit(f"提出URLの形式が不正です: {args.url}\n  → 例: https://atcoder.jp/contests/abc466/submissions/77540984")
+        contest_id, submission_id = m.group(1), int(m.group(2))
+        code = fetch_code(contest_id, submission_id)
+        SAVE_DIR.mkdir(parents=True, exist_ok=True)
+        save_path = SAVE_DIR / f"{contest_id}_{submission_id}.py"
+        save_path.write_text(code, encoding="utf-8", newline="\n")
+        print(json.dumps({
+            "contest_id": contest_id,
+            "submission_url": args.url,
+            "saved_to": str(save_path),
+        }, ensure_ascii=False, indent=2))
         return
 
     user = load_username(args.user)
