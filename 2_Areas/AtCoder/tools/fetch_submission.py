@@ -24,6 +24,7 @@ from pathlib import Path
 API_URL = "https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user={user}&from_second={from_second}"
 SUBMISSION_URL = "https://atcoder.jp/contests/{contest_id}/submissions/{submission_id}"
 MODELS_URL = "https://kenkoooo.com/atcoder/resources/problem-models.json"
+HISTORY_URL = "https://atcoder.jp/users/{user}/history/json"
 
 # kenkoooo.com のWAFはブラウザ相当のヘッダを要求する。
 # 特に Accept-Encoding が urllib 既定の identity だと 403 になる（gzip 必須）。
@@ -124,6 +125,12 @@ def fetch_code(contest_id: str, submission_id: int) -> str:
     return html.unescape(m.group(1))
 
 
+def get_rating_history(user: str) -> list[dict]:
+    """AtCoder公式のレート履歴を返す（Rated回のみ・古い順）。"""
+    data = json.loads(http_get(HISTORY_URL.format(user=user)))
+    return [h for h in data if h.get("IsRated")]
+
+
 def get_difficulty(problem_ids: list[str]) -> dict[str, int | None]:
     """AtCoder Problemsの実測Difficultyを返す（7日キャッシュ）。
 
@@ -168,7 +175,21 @@ def main() -> None:
     parser.add_argument("--diff", nargs="+", metavar="PROBLEM_ID",
                         help="問題の実測Difficulty（AtCoder Problems準拠）を表示して終了")
     parser.add_argument("--url", help="提出詳細ページのURLから直接コード取得（API未反映時の復旧用。提出詳細は公開）")
+    parser.add_argument("--rating", action="store_true", help="レート履歴（Rated回）を表示して終了")
     args = parser.parse_args()
+
+    if args.rating:
+        user = load_username(args.user)
+        hist = get_rating_history(user)
+        if not hist:
+            sys.exit(f"Rated参加履歴がありません（user={user}）")
+        for h in hist:
+            contest = h["ContestScreenName"].split(".")[0]
+            print(f"{h['EndTime'][:10]}  {contest:10}  perf={h['Performance']:>5}  "
+                  f"→ rate={h['NewRating']:>5}  ({h['NewRating'] - h['OldRating']:+d})")
+        latest = hist[-1]
+        print(f"\n現在レート: {latest['NewRating']} / 最高: {max(h['NewRating'] for h in hist)} / Rated {len(hist)}回")
+        return
 
     if args.diff:
         for pid, d in get_difficulty(args.diff).items():
