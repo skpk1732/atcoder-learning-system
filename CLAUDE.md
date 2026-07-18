@@ -36,6 +36,7 @@ python 2_Areas/AtCoder/tools/fetch_submission.py --index 1          # 1つ前
 python 2_Areas/AtCoder/tools/fetch_submission.py --list --ac        # AC済み問題ID一覧（重複提案の回避に使う）
 python 2_Areas/AtCoder/tools/fetch_submission.py --diff abc129_c    # 実測Difficulty照会（提案前に必ず）
 python 2_Areas/AtCoder/tools/fetch_submission.py --url <提出URL>    # API未反映時の復旧（詳細ページから直接取得）
+python 2_Areas/AtCoder/tools/fetch_submission.py --rating          # レート履歴（AtCoder公式API・Rated回）
 ```
 
 既知の挙動（ハマりどころ）：
