@@ -34,10 +34,12 @@ python 2_Areas/AtCoder/tools/fetch_submission.py                    # 最新の�
 python 2_Areas/AtCoder/tools/fetch_submission.py --problem abc129_c --ac  # 問題指定
 python 2_Areas/AtCoder/tools/fetch_submission.py --index 1          # 1つ前
 python 2_Areas/AtCoder/tools/fetch_submission.py --list --ac        # AC済み問題ID一覧（重複提案の回避に使う）
+python 2_Areas/AtCoder/tools/fetch_submission.py --diff abc129_c    # 実測Difficulty照会（提案前に必ず）
+python 2_Areas/AtCoder/tools/fetch_submission.py --url <提出URL>    # API未反映時の復旧（詳細ページから直接取得）
 ```
 
 既知の挙動（ハマりどころ）：
-- **AtCoder Problems APIは提出直後の反映にラグがある**（数十分〜数時間）。直近の提出が見つからないときは、ユーザーに提出詳細ページのURLを貼ってもらい `fetch_code()` で直接取る（詳細ページは公開。**一覧ページはログイン必須**なのでスクレイピング不可）
+- **AtCoder Problems APIは提出直後の反映にラグがある**（数十分〜数時間）。直近の提出が見つからないときは、ユーザーに提出詳細ページのURLを貼ってもらい **`--url <提出URL>`** で直接取る（詳細ページは公開。**一覧ページはログイン必須**なのでスクレイピング不可）
 - kenkoooo.comのWAFは `Accept-Encoding: gzip` が無いと403（対処済み・`BROWSER_HEADERS` 参照）
 - 古いABC（〜126あたり）のC/DはARCと共有で problem_id が `arc086_a` 形式のことがある
 - 検証は `python -m py_compile` ＋ 実通信テスト
