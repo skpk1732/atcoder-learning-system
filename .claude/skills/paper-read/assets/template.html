@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a1a; --muted: #666; --border: #d8d8d8;
+    --en-bg: #f7f7f7; --accent: #3b6ea5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e; --fg: #e6e6e6; --muted: #9a9a9a; --border: #444;
+      --en-bg: #27292c; --accent: #7aa5d2;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0 auto; padding: 1.5rem 1rem 6rem; max-width: 46rem;
+    background: var(--bg); color: var(--fg);
+    font-family: "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+  }
+  header.paper-meta { border-bottom: 2px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  header.paper-meta h1 { font-size: 1.35rem; line-height: 1.5; margin: 0 0 .5rem; }
+  header.paper-meta .authors, header.paper-meta .links { color: var(--muted); font-size: .9rem; margin: .2rem 0; }
+  .notice { font-size: .8rem; color: var(--muted); margin-top: .6rem; }
+  a { color: var(--accent); }
+
+  nav.toc { border: 1px solid var(--border); border-radius: 8px; padding: .8rem 1.2rem; font-size: .9rem; margin-bottom: 2rem; }
+  nav.toc ol { margin: .3rem 0; padding-left: 1.4rem; }
+
+  h2 { font-size: 1.2rem; border-left: 4px solid var(--accent); padding-left: .6rem; margin-top: 2.5rem; line-height: 1.5; }
+  h3 { font-size: 1.05rem; margin-top: 2rem; line-height: 1.5; }
+  h2 .en-head, h3 .en-head { display: block; font-size: .8em; font-weight: normal; color: var(--muted); }
+
+  /* ブロック: 原文（上）→ 逐語訳（下）の縦積み */
+  .block { margin: 1.4rem 0; }
+  .block .en {
+    background: var(--en-bg); border-left: 3px solid var(--border);
+    padding: .5rem .8rem; margin: 0; border-radius: 0 6px 6px 0;
+    font-size: .88rem; line-height: 1.6; color: var(--muted);
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  .block .ja { margin: .5rem 0 0; line-height: 1.95; }
+  body.hide-en .block .en { display: none; }
+
+  figure { margin: 2rem 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; }
+  figcaption { text-align: left; font-size: .85rem; margin-top: .6rem; }
+  figcaption .en { color: var(--muted); display: block; font-family: Georgia, serif; }
+  figcaption .ja { display: block; margin-top: .25rem; }
+
+  .table-wrap { overflow-x: auto; margin: 2rem 0; }
+  table { border-collapse: collapse; font-size: .85rem; }
+  th, td { border: 1px solid var(--border); padding: .35rem .6rem; }
+
+  math { font-size: 1.05em; }
+  code { background: var(--en-bg); padding: .1em .35em; border-radius: 4px; font-size: .9em; }
+
+  details.references { margin-top: 3rem; font-size: .85rem; }
+  details.references summary { cursor: pointer; font-weight: bold; }
+
+  #toggle-en {
+    position: fixed; right: 1rem; bottom: 1rem; z-index: 10;
+    padding: .5rem .9rem; border-radius: 999px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--fg); cursor: pointer; font-size: .85rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+</style>
+</head>
+<body>
+<header class="paper-meta">
+  <h1>{{TITLE}}</h1>
+  <p class="authors">{{AUTHORS}}</p>
+  <p class="links"><a href="{{URL}}">{{URL}}</a> ｜ 対訳生成日: {{DATE}}</p>
+  <p class="notice">逐語訳（要約・解釈・コメントは含まない）。図表は原文のまま。主要な専門用語は英語のまま表記。</p>
+</header>
+
+<nav class="toc"><strong>目次</strong><ol id="toc-list"></ol></nav>
+
+<main id="content">
+<!-- 対訳ブロックはこの下に追記していく -->
+
+<!-- END_OF_CONTENT -->
+</main>
+
+<button id="toggle-en">原文を隠す</button>
+<script>
+  const btn = document.getElementById("toggle-en");
+  btn.addEventListener("click", () => {
+    document.body.classList.toggle("hide-en");
+    btn.textContent = document.body.classList.contains("hide-en") ? "原文を表示" : "原文を隠す";
+  });
+  const toc = document.getElementById("toc-list");
+  document.querySelectorAll("main h2").forEach((h, i) => {
+    h.id = h.id || "sec-" + (i + 1);
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = "#" + h.id;
+    a.textContent = (h.querySelector(".ja-head") || h).textContent.trim();
+    li.appendChild(a);
+    toc.appendChild(li);
+  });
+</script>
+</body>
+</html>
