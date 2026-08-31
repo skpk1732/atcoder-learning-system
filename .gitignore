@@ -8,6 +8,9 @@
 !CLAUDE.md
 !README.md
 
+# GitHub Actions（CI定義）
+!.github/
+
 # Claude Code のスキル・設定
 !.claude/
 
