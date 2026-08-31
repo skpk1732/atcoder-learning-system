@@ -80,6 +80,20 @@ python 2_Areas/AtCoder/tools/fetch_submission.py --rating          # レート�
 - **Codexクロスレビューのフロー**：システムを変更 → commit → ユーザーがCodexに `git show HEAD` をレビューさせる → 指摘が貼られたら妥当性を検証（鵜呑みにしない）→ 妥当なものだけ修正 → commit
 - コミットメッセージは日本語
 
+## GitHubポートフォリオ運用（2026-09-01開始・アカウント skpk1732）
+
+3リポジトリを運用中。**このボルトのシステムを変更してcommitしたら、pushまで行う**：
+
+| リポジトリ | 実体 | 公開 | 備考 |
+|---|---|---|---|
+| `skpk1732/atcoder-learning-system` | このボルトのrepo（master） | **public** | スキル＋ツールのみ（ホワイトリスト） |
+| `skpk1732/apology-benchmark` | `1_Projects/謝罪ベンチマーク研究/`（ネストrepo） | private | 実験を回したら結果とセットでcommit＆push |
+| `skpk1732/hit-u_help_AI` | `1_Projects/hit-u_help_AI/hit-u_help_AI-yossy_model/`（ネストrepo） | private | 詳細は同repoの `REPO_NOTES.md` |
+
+- 研究repoの制約：**FKCコーパス本体・全量抽出（`FKC_不満一覧.*`）・論文対訳・PDF実体はgit管理外**（CC BY-NC-SA 4.0・学術研究限定）。**public化するときはFKC由来の実験データ（samples/trial/results）の扱いを必ず再検討**
+- hit-u repoは履歴から `.env` をfilter-repoで除去済み（旧repoとハッシュ不一致・バックアップは `1_Projects/hit-u_help_AI/hit-u_backup_prefilter.bundle`）。**public化禁止**（条件は `REPO_NOTES.md`）
+- ネストrepo方式：外側ボルトは `/*` で全除外しているので干渉しない。作業時は必ず該当ディレクトリで git 操作する
+
 ## 英語学習システム（2_Areas/English/）
 
 AtCoderと同じくInbox処理型で運用する。ユーザーが `2_Areas/English/英語Inbox.md` の `## 未処理` にある用途別欄へ書く:
