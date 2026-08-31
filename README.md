@@ -1,5 +1,7 @@
 # AtCoder学習システム（Claude Code スキル群）
 
+![CI](https://github.com/skpk1732/atcoder-learning-system/actions/workflows/ci.yml/badge.svg)
+
 AtCoderのレート向上（茶色 → 緑 → 水色）を目的に、**Claude Code のスキル＋Pythonツール**で構築した個人用学習システム。Obsidianボルト（PKM）の上で動作し、問題提案 → 演習 → 精進記録 → コードレビューのサイクルを半自動化している。
 
 > このリポジトリはObsidianボルトのシステム部分（スキル・ツール）のみをホワイトリスト方式で管理したもの。学習ノート本体はローカル専用（`.gitignore` 参照）。
