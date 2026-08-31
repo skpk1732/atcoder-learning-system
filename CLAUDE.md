@@ -93,6 +93,8 @@ python 2_Areas/AtCoder/tools/fetch_submission.py --rating          # レート�
 - 研究repoの制約：**FKCコーパス本体・全量抽出（`FKC_不満一覧.*`）・論文対訳・PDF実体はgit管理外**（CC BY-NC-SA 4.0・学術研究限定）。**public化するときはFKC由来の実験データ（samples/trial/results）の扱いを必ず再検討**
 - hit-u repoは履歴から `.env` をfilter-repoで除去済み（旧repoとハッシュ不一致・バックアップは `1_Projects/hit-u_help_AI/hit-u_backup_prefilter.bundle`）。**public化禁止**（条件は `REPO_NOTES.md`）
 - ネストrepo方式：外側ボルトは `/*` で全除外しているので干渉しない。作業時は必ず該当ディレクトリで git 操作する
+- **ボルトrepoのシステム変更はPRワークフローで行う**（2026-09-01〜）：ブランチ（`feature/xxx`）→ commit → push → `gh pr create`（日本語）→ **CI通過を確認** → merge。Codexクロスレビューの指摘・対応はPRコメントに残すと可視化される。タイポ修正等の軽微な変更はmaster直コミットでも可
+- CI：`.github/workflows/ci.yml` がpush/PR時に py_compile＋pytest（`2_Areas/AtCoder/tools/test_fetch_submission.py`・オフライン）を自動実行。ツールを変更したらテストも更新する
 
 ## 英語学習システム（2_Areas/English/）
 
