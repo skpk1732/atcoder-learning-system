@@ -6,6 +6,7 @@
 !.gitignore
 !AGENTS.md
 !CLAUDE.md
+!README.md
 
 # Claude Code のスキル・設定
 !.claude/
@@ -20,8 +21,10 @@
 
 # ローカル専用ファイルは管理しない（後方のルールが優先される）
 # - settings.local.json: 実行許可などマシン固有の設定を他環境に持ち込まない
+# - launch.json: ローカル専用プロジェクト（git管理外）を参照する起動設定
 # - config.json: 個人のAtCoder ID（config.example.json を雛形として管理）
 .claude/settings.local.json
+.claude/launch.json
 2_Areas/AtCoder/tools/config.json
 2_Areas/AtCoder/tools/problem_models_cache.json
 __pycache__/
