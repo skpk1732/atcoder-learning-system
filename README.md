@@ -69,4 +69,7 @@ cp 2_Areas/AtCoder/tools/config.example.json 2_Areas/AtCoder/tools/config.json
 
 ## 運用ルール
 
-詳細は [CLAUDE.md](CLAUDE.md)（Claude Code向けのリポジトリガイド）と [AGENTS.md](AGENTS.md)（レビュアー向けガイド）を参照。
+- **git管理はホワイトリスト方式**：スキル・ツールなどシステム部分のみを公開し、学習ノート・個人設定はローカル専用
+- **PRワークフロー＋CI**：システム変更はブランチ → PR → CI（py_compile＋pytest）通過 → マージで運用
+- **クロスレビュー体制**：Claude Codeが実装し、独立レビュアー（Codex）が `git show HEAD` ベースでレビュー。レビュアー向け指示は [AGENTS.md](AGENTS.md) を参照
+- Claude Code向けの指示書（CLAUDE.md）は個人の学習状況・進行中プロジェクトの情報を含むため**ローカル専用**とし、このリポジトリには含めていない

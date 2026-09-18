@@ -12,13 +12,13 @@ description: 論文（主にarXiv）の逐語訳HTML（対訳ページ）を作�
 
 1. **逐語訳**：全文を文単位で忠実に訳す。要約・省略・意訳・補足コメント・重要マーク（`==` 蛍光ペン等）は一切加えない
 2. **図表はそのまま**：図の画像は原文のまま埋め込む。表も原文の内容のまま再現。キャプションのみ「原文＋訳」を併記
-3. **主要な専門用語は英語のまま**：apology / benchmark / annotator / prompt / fine-tuning / hallucination 等の術語は訳さず英語表記で埋め込む（一般語は日本語に訳す）。論文固有のキー概念（提案手法名・データセット名・評価指標名）も英語のまま
+3. **主要な専門用語は英語のまま**：benchmark / annotator / prompt / fine-tuning / hallucination 等の術語は訳さず英語表記で埋め込む（一般語は日本語に訳す）。論文固有のキー概念（提案手法名・データセット名・評価指標名）も英語のまま
 4. **レイアウトはブロック縦積み**：適当な長さのブロック（基本は原文の1段落。長すぎれば文境界で2〜3分割）ごとに、原文→訳の順で縦に並べる。左右2カラムにはしない
 
 ## 入力と保存先
 
 - 入力：arXiv URL / arXiv ID / ローカルPDFパス。無ければ「どの論文ですか?（arXiv URLかPDFパス）」と1つだけ質問
-- 保存先：`1_Projects/謝罪ベンチマーク研究/06_論文対訳/<arxiv_id または短いslug>/index.html`
+- 保存先：`1_Projects/<研究プロジェクト>/06_論文対訳/<arxiv_id または短いslug>/index.html`（実際のプロジェクト名はローカルの CLAUDE.md を参照）
   - 別プロジェクトの論文だと分かる場合はそのプロジェクト配下の `論文対訳/` に置く
   - 画像は同フォルダの `figs/`、取得したソースHTMLも同フォルダに残す（再翻訳・検証用）
 - 一時ファイル（動作確認など）はscratchpadに作る。ボルトには成果物以外を残さない
@@ -29,7 +29,7 @@ description: 論文（主にarXiv）の逐語訳HTML（対訳ページ）を作�
 
 ```powershell
 $env:PYTHONIOENCODING = "utf-8"
-python .claude/skills/paper-read/tools/fetch_arxiv.py <arXiv ID or URL> --out "1_Projects/謝罪ベンチマーク研究/06_論文対訳/<id>"
+python .claude/skills/paper-read/tools/fetch_arxiv.py <arXiv ID or URL> --out "1_Projects/<研究プロジェクト>/06_論文対訳/<id>"
 ```
 
 - arxiv.org/html → ar5iv の順で試し、画像を `figs/` にローカル保存、翻訳用の `source_clean.html` を生成する
@@ -51,8 +51,8 @@ python .claude/skills/paper-read/tools/fetch_arxiv.py <arXiv ID or URL> --out "1
 <section>
 <h2><span class="en-head">3 Experimental Setup</span><span class="ja-head">3 実験設定</span></h2>
 <div class="block">
-  <p class="en">We presented 120 apology scenarios to five LLMs ...</p>
-  <p class="ja">我々は5つのLLMに120件のapologyシナリオを提示し…</p>
+  <p class="en">We presented 120 reasoning tasks to five LLMs ...</p>
+  <p class="ja">我々は5つのLLMに120件のreasoningタスクを提示し…</p>
 </div>
 </section>
 ```
