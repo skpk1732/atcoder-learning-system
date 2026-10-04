@@ -83,7 +83,7 @@ python .claude/skills/paper-read/tools/fetch_arxiv.py <arXiv ID or URL> --out "1
 ### 6. 完了報告
 
 - index.html のフルパスと、未訳部分（References / Appendix）の明示
-- `02_論文リスト/references.bib`・`論文リスト.xlsx` への登録は**しない**（ユーザー管理）。未登録らしければ一言添えるだけ
+- サーベイissueへの登録・要約は**このスキルではしない**（`/paper-survey add` の担当。逐語訳に解釈を混ぜない）。未登録らしければ一言添えるだけ
 
 ## 方針
 
