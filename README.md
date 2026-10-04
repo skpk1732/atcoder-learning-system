@@ -24,6 +24,7 @@ AtCoderのレート向上（茶色 → 緑 → 水色）を目的に、**Claude 
 | `.claude/skills/atcoder-review` | 提出コードを複数エージェントで並行レビュー（正確性 / 計算量 / 簡略化の3レンズ）。バグ指摘はリファレンス実装とのストレステストで裏取りしてから確定 |
 | `.claude/skills/english-inbox-process` | （おまけ）英語学習のInbox処理。未知の表現に意味・例文を付けて語彙集へ追記 |
 | `.claude/skills/paper-read` | （おまけ）arXiv論文の逐語訳HTML（対訳ページ）を生成 |
+| `.claude/skills/paper-survey` | （おまけ）論文サーベイをGitHub issueで管理（1論文=1issue）。書誌・問題意識・手法・結果などの下書きコメントをClaudeが付け、数値は原文と機械的に照合して検証する |
 | `2_Areas/AtCoder/tools/fetch_submission.py` | AtCoder Problems API / 公式APIから提出・Difficulty・レート履歴を取得するCLIツール |
 | `2_Areas/AtCoder/snippets.py` | コンテスト用コピペスニペット集（Union-Find・BFS/DFS・二分探索など） |
 
