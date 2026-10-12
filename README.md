@@ -4,7 +4,7 @@
 
 AtCoderのレート向上（茶色 → 緑 → 水色）を目的に、**Claude Code のスキル＋Pythonツール**で構築した個人用学習システム。Obsidianボルト（PKM）の上で動作し、問題提案 → 演習 → 精進記録 → コードレビューのサイクルを半自動化している。
 
-> このリポジトリはObsidianボルトのシステム部分（スキル・ツール）のみをホワイトリスト方式で管理したもの。学習ノート本体はローカル専用（`.gitignore` 参照）。
+> このリポジトリは、Obsidianボルト上で動かしている複数システムのうち **AtCoder学習システムの部分だけ** を、ボルトの履歴から抽出（`git filter-repo`）して公開しているもの。学習ノート本体や他のシステムはローカル専用（`.gitignore` 参照）。
 
 ## システム構成
 
@@ -22,9 +22,6 @@ AtCoderのレート向上（茶色 → 緑 → 水色）を目的に、**Claude 
 | `.claude/skills/atcoder-daily` | 現在のレート・フェーズに合う問題を提案。**テーマ・解法は伏せる**（型を見抜く訓練のため）。AC済み問題の重複提案を回避し、提案前に実測Difficultyを必ず照会 |
 | `.claude/skills/atcoder-record` | 精進記録ノートを作成。提出コード・実行時間・実測Diff・レビュー結果まで一括記録 |
 | `.claude/skills/atcoder-review` | 提出コードを複数エージェントで並行レビュー（正確性 / 計算量 / 簡略化の3レンズ）。バグ指摘はリファレンス実装とのストレステストで裏取りしてから確定 |
-| `.claude/skills/english-inbox-process` | （おまけ）英語学習のInbox処理。未知の表現に意味・例文を付けて語彙集へ追記 |
-| `.claude/skills/paper-read` | （おまけ）arXiv論文の逐語訳HTML（対訳ページ）を生成 |
-| `.claude/skills/paper-survey` | （おまけ）論文サーベイをGitHub issueで管理（1論文=1issue）。書誌・問題意識・手法・結果などの下書きコメントをClaudeが付け、数値は原文と機械的に照合して検証する |
 | `2_Areas/AtCoder/tools/fetch_submission.py` | AtCoder Problems API / 公式APIから提出・Difficulty・レート履歴を取得するCLIツール |
 | `2_Areas/AtCoder/snippets.py` | コンテスト用コピペスニペット集（Union-Find・BFS/DFS・二分探索など） |
 
@@ -70,7 +67,7 @@ cp 2_Areas/AtCoder/tools/config.example.json 2_Areas/AtCoder/tools/config.json
 
 ## 運用ルール
 
-- **git管理はホワイトリスト方式**：スキル・ツールなどシステム部分のみを公開し、学習ノート・個人設定はローカル専用
+- **git管理はホワイトリスト方式**：ボルト側ではスキル・ツールなどシステム部分のみを管理し、学習ノート・個人設定はローカル専用。公開リポジトリにはそのうちAtCoder部分だけを抽出
 - **PRワークフロー＋CI**：システム変更はブランチ → PR → CI（py_compile＋pytest）通過 → マージで運用
 - **クロスレビュー体制**：Claude Codeが実装し、独立レビュアー（Codex）が `git show HEAD` ベースでレビュー。レビュアー向け指示は [AGENTS.md](AGENTS.md) を参照
 - Claude Code向けの指示書（CLAUDE.md）は個人の学習状況・進行中プロジェクトの情報を含むため**ローカル専用**とし、このリポジトリには含めていない
